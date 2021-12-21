@@ -1,0 +1,27 @@
+version: '3.7'
+
+services:
+  lnd:
+    container_name: lnd
+    image: lightninglabs/lnd:v0.14.1-beta@sha256:810f290f4da51adaf57d53bc1f1e65b52b03c543f322da0b98fb8c47be94a27a
+    user: 1000:1000
+    volumes:
+      - ${PWD}/lnd:/data/.lnd
+    environment:
+      HOME: /data
+    restart: on-failure
+    stop_grace_period: 5m30s
+    ports:
+      - "9735:9735"
+      - "10009:10009"
+      - "8080:8080"
+    networks:
+      default:
+        ipv4_address: "10.10.254.100"
+networks:
+  default:
+    name: lnd_testnet_network
+    ipam:
+      driver: default
+      config:
+        - subnet: "10.10.254.0/24"
